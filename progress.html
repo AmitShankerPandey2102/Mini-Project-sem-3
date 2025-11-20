@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress - Disaster Preparedness</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+    /* ===== GLOBAL (keep consistent with other pages) ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #f4f7ff;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== HEADER ===== */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #3a6ff7;
+}
+
+header p {
+    color: #444;
+    margin: 5px 0;
+}
+
+header a {
+    color: #3a6ff7;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+/* ===== DASHBOARD STATS CARDS ===== */
+#progressStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.feature-card {
+    background: #f9faff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7ff;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #3a6ff7;
+}
+
+/* ===== SIMULATION HISTORY ===== */
+.simulation-scene h2 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    color: #111;
+    border-left: 5px solid #3a6ff7;
+    padding-left: 10px;
+}
+
+#progressHistory {
+    margin-top: 10px;
+}
+
+.history-box {
+    background: #eef2ff;
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 10px;
+    border-left: 6px solid #3a6ff7;
+    transition: 0.25s;
+}
+
+.history-box:hover {
+    background: #e0e7ff;
+    transform: translateX(5px);
+}
+
+.history-box strong {
+    font-size: 1.1rem;
+    color: #111;
+}
+
+.history-box span {
+    float: right;
+    color: #444;
+}
+
+/* ===== CLEAR PROGRESS BUTTON ===== */
+.btn {
+    padding: 12px 20px;
+    background: #3a6ff7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn:hover {
+    background: #224ccc;
+    transform: translateY(-3px);
+}
+
+.btn[style*="background: #e74c3c"] {
+    background: #e74c3c !important;
+}
+
+.btn[style*="background: #e74c3c"]:hover {
+    background: #c0392b !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    #progressStats {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 My Learning Progress</h1>
+            <p>Track your safety training journey</p>
+            <p><a href="dashboard.html">← Back to Dashboard</a></p>
+        </header>
+
+        <div id="progressStats" class="dashboard">
+            <div class="feature-card">
+                <h3>Completed Simulations</h3>
+                <p id="completedCount">0</p>
+            </div>
+            <div class="feature-card">
+                <h3>Average Score</h3>
+                <p id="averageScore">0%</p>
+            </div>
+            <div class="feature-card">
+                <h3>Total Learning Time</h3>
+                <p id="learningTime">0 min</p>
+            </div>
+        </div>
+
+        <div class="simulation-scene" style="margin-top: 30px;">
+            <h2>Simulation History</h2>
+            <div id="progressHistory">
+                <!-- Progress history will be loaded here -->
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="clearProgress()" class="btn" style="background: #e74c3c;">Clear All Progress</button>
+        </div>
+    </div>
+
+    <script>
+        function loadProgress() {
+            const progress = JSON.parse(localStorage.getItem('userProgress')) || [];
+            const completed = progress.length;
+            const totalScore = progress.reduce((sum, item) => sum + item.score, 0);
+            const averageScore = completed > 0 ? Math.round((totalScore / completed) * 100) : 0;
+            
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('averageScore').textContent = `${averageScore}%`;
+            document.getElementById('learningTime').textContent = `${completed * 5} min`; // Estimate 5 min per simulation
+
+            // Display progress history
+            const historyContainer = document.getElementById('progressHistory');
+            if (progress.length === 0) {
+                historyContainer.innerHTML = '<p>No simulations completed yet. Start practicing!</p>';
+            } else {
+                historyContainer.innerHTML = progress.map(item => `
+                    <div style="background: #34495e; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                        <strong>${item.type.toUpperCase()}</strong> - Score: ${item.score}/${item.total} 
+                        <span style="float: right;">${item.date}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function clearProgress() {
+            if (confirm('Are you sure you want to clear all your progress? This cannot be undone.')) {
+                localStorage.removeItem('userProgress');
+                loadProgress();
+                alert('Progress cleared!');
+            }
+        }
+
+        // Load progress when page loads
+        document.addEventListener('DOMContentLoaded', loadProgress);
+    </script>
+</body>
+</html>

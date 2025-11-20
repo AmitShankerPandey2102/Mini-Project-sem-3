@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learn Safety - Disaster Preparedness</title>
+
+  <!-- If you already have ../css/style.css, you can remove the <style> below and merge these rules into your stylesheet -->
+  <style>
+    /* --- Basic reset & fonts --- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+    :root{
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(16,24,40,0.08);
+      --gap: 20px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #f7fbff 0%, var(--bg) 100%);
+      color:#0f172a;
+      display:flex;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .container{
+      width:100%;
+      max-width:1100px;
+      background:var(--card);
+      border-radius:16px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,0.04);
+    }
+
+    header{
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    header h1{
+      font-size:1.6rem;
+      letter-spacing:0.2px;
+      margin-bottom:6px;
+    }
+
+    header p{ color:var(--muted); font-size:0.98rem; margin-bottom:6px; }
+    header a{ color:var(--accent); text-decoration:none; font-weight:600; font-size:0.95rem; }
+    header a:hover{ text-decoration:underline; }
+
+    /* Dashboard grid */
+    .dashboard{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--gap);
+      align-items:stretch;
+    }
+
+    /* Card with icon */
+    .dashboard-card{
+      background: linear-gradient(180deg, rgba(37,99,235,0.04), rgba(255,255,255,0));
+      border-radius:12px;
+      padding:18px;
+      min-height:120px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+      border:1px solid rgba(37,99,235,0.06);
+      gap:10px;
+    }
+
+    .card-top{ display:flex; align-items:center; gap:12px; }
+    .icon{
+      width:44px;
+      height:44px;
+      flex:0 0 44px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:10px;
+      background:rgba(15,23,42,0.04);
+      border:1px solid rgba(15,23,42,0.03);
+    }
+    .icon svg{ width:24px; height:24px; display:block; }
+
+    .dashboard-card h3{ font-size:1.05rem; margin:0; }
+    .dashboard-card p{ color:var(--muted); font-size:0.92rem; margin-top:6px; }
+
+    .dashboard-card:hover,
+    .dashboard-card:focus{
+      transform: translateY(-8px);
+      box-shadow: 0 18px 50px rgba(37,99,235,0.08);
+      outline: none;
+    }
+
+    #courseContent{
+      margin-top: 28px;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(245,247,255,0.6), rgba(255,255,255,0.7));
+      border-radius:12px;
+      border:1px solid rgba(14,20,40,0.04);
+    }
+
+    .simulation-scene{ max-width:900px; margin:0 auto; }
+
+    #courseTitle{ font-size:1.25rem; margin-bottom:10px; }
+    #courseMaterial{
+      color:#111827;
+      line-height:1.55;
+      font-size:0.97rem;
+      margin-bottom:18px;
+      max-height:360px; /* makes it scrollable so progress updates */
+      overflow:auto;
+      padding-right:8px;
+      padding-left:4px;
+    }
+    #courseMaterial ul{ margin:10px 0 16px 18px; list-style: disc; color:#111827; }
+
+    .btn{
+      display:inline-block;
+      padding:10px 16px;
+      border-radius:10px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:600;
+      border:none;
+      cursor:pointer;
+      transition: transform 150ms, box-shadow 150ms;
+    }
+    .btn:hover{ transform: translateY(-3px); box-shadow: 0 12px 30px rgba(37,99,235,0.12); }
+
+    /* Progress indicator */
+    .progress-wrap{
+      height:10px;
+      background: rgba(15,23,42,0.06);
+      border-radius:999px;
+      overflow:hidden;
+      margin-bottom:12px;
+      position:relative;
+    }
+    #progressBar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg,var(--accent), #4f46e5);
+      transition: width 120ms linear;
+    }
+    .progress-meta{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      font-size:0.92rem;
+      color:var(--muted);
+    }
+
+    /* Responsive rules */
+    @media (max-width:1000px){ .dashboard{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width:600px){
+      body{ padding:18px; }
+      .dashboard{ grid-template-columns: 1fr; gap:14px; }
+      header h1{ font-size:1.25rem; }
+      .container{ padding:18px; }
+      .icon{ width:40px; height:40px; flex:0 0 40px; }
+    }
+
+    /* Accessibility focus */
+    .dashboard-card:focus-visible{
+      box-shadow: 0 0 0 4px rgba(79,70,229,0.12);
+      border-color: rgba(79,70,229,0.22);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 Learn Safety</h1>
+      <p>Educational resources for disaster preparedness</p>
+      <p><a href="dashboard.html">← Back to Dashboard</a></p>
+    </header>
+
+    <div class="dashboard" role="list">
+      <!-- Earthquake -->
+      <div class="dashboard-card" role="listitem" tabindex="0" onclick="showCourse('earthquake')" onkeypress="if(event.key==='Enter') showCourse('earthquake')">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true">
+            <!-- simple zig-zag / quake icon -->
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3 15l4-6 3 4 3-8 4 6 4-3" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div>
+            <h3>🌋 Earthquake Safety</h3>
+            <p>Learn how to prepare and respond to earthquakes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fire -->
+      <div class="dashboard-card" role="listitem" tabindex="0" onclick="showCourse('fire')" onkeypress="if(event.key==='Enter') showCourse('fire')">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true">
+            <!-- flame icon -->
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2s3 3.5 3 6.5C15 11 12 13 12 13s-3-2-3-4.5C9 5.5 12 2 12 2z" fill="#fb923c" />
+              <path d="M8.5 15.5C7 16.8 6 18.9 6 21h12c0-2.1-1-4.2-2.5-5.5C14 13 12 11 12 11s-2 2-3.5 4.5z" fill="#ef4444" />
+            </svg>
+          </span>
+          <div>
+            <h3>🔥 Fire Safety</h3>
+            <p>Fire prevention and evacuation procedures</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flood -->
+      <div class="dashboard-card" role="listitem" tabindex="0" onclick="showCourse('flood')" onkeypress="if(event.key==='Enter') showCourse('flood')">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true">
+            <!-- water droplet -->
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 3s5 6 5 10a5 5 0 11-10 0C7 9 12 3 12 3z" fill="#0ea5e9"/>
+            </svg>
+          </span>
+          <div>
+            <h3>💧 Flood Safety</h3>
+            <p>Dealing with floods and water emergencies</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- First Aid -->
+      <div class="dashboard-card" role="listitem" tabindex="0" onclick="showCourse('firstaid')" onkeypress="if(event.key==='Enter') showCourse('firstaid')">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true">
+            <!-- first aid cross -->
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="3" y="7" width="18" height="14" rx="2" fill="#bbf7d0"/>
+              <path d="M12 10v6M9 13h6" stroke="#065f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div>
+            <h3>🩹 First Aid Basics</h3>
+            <p>Essential medical emergency response</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course panel -->
+    <div id="courseContent" style="display: none; margin-top: 30px;">
+      <div class="simulation-scene">
+        <h2 id="courseTitle">Course Title</h2>
+
+        <!-- Progress meta + bar -->
+        <div class="progress-meta" aria-hidden="false">
+          <div id="progressLabel">Progress</div>
+          <div id="progressPercent">0%</div>
+        </div>
+        <div class="progress-wrap" aria-hidden="false" aria-label="Course progress">
+          <div id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+
+        <div id="courseMaterial" tabindex="0" aria-live="polite">
+          <!-- Course content will be loaded here -->
+        </div>
+
+        <div style="margin-top:16px;">
+          <button onclick="hideCourse()" class="btn">Back to Courses</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // course data
+    const courses = {
+      earthquake: {
+        title: "Earthquake Safety Guide",
+        content: `
+          <h3>Before an Earthquake:</h3>
+          <ul>
+            <li>Secure heavy furniture to walls</li>
+            <li>Prepare an emergency kit with water, food, and first aid</li>
+            <li>Identify safe spots in each room</li>
+            <li>Practice "Drop, Cover, and Hold On"</li>
+          </ul>
+
+          <h3>During an Earthquake:</h3>
+          <ul>
+            <li>DROP to the ground</li>
+            <li>COVER under sturdy furniture</li>
+            <li>HOLD ON until shaking stops</li>
+            <li>Stay away from windows and heavy objects</li>
+          </ul>
+
+          <h3>After an Earthquake:</h3>
+          <ul>
+            <li>Check for injuries and provide first aid</li>
+            <li>Inspect for gas leaks and fires</li>
+            <li>Listen to emergency broadcasts</li>
+            <li>Be prepared for aftershocks</li>
+          </ul>
+        `
+      },
+      fire: {
+        title: "Fire Safety Procedures",
+        content: `
+          <h3>Fire Prevention:</h3>
+          <ul>
+            <li>Install smoke detectors on every level</li>
+            <li>Keep fire extinguishers accessible</li>
+            <li>Never leave cooking unattended</li>
+            <li>Maintain electrical safety</li>
+          </ul>
+
+          <h3>During a Fire:</h3>
+          <ul>
+            <li>Alert everyone and call emergency services</li>
+            <li>Use appropriate fire extinguisher if safe</li>
+            <li>Stay low to avoid smoke inhalation</li>
+            <li>Feel doors before opening - if hot, use another exit</li>
+          </ul>
+
+          <h3>Evacuation:</h3>
+          <ul>
+            <li>Know two ways out of every room</li>
+            <li>Designate a meeting point outside</li>
+            <li>Never use elevators during fires</li>
+            <li>Close doors behind you to slow fire spread</li>
+          </ul>
+        `
+      },
+      flood: {
+        title: "Flood Safety Guide",
+        content: `
+          <h3>Before a Flood:</h3>
+          <ul>
+            <li>Know flood risk in your area</li>
+            <li>Elevate important items above likely flood levels</li>
+            <li>Store documents in waterproof bags</li>
+            <li>Have an evacuation plan and route</li>
+          </ul>
+
+          <h3>During a Flood:</h3>
+          <ul>
+            <li>Move to higher ground immediately</li>
+            <li>Avoid walking or driving through floodwaters</li>
+            <li>Turn off utilities if safe to do so</li>
+          </ul>
+
+          <h3>After a Flood:</h3>
+          <ul>
+            <li>Return home only when authorities say it's safe</li>
+            <li>Avoid contact with contaminated water</li>
+            <li>Document damage for insurance</li>
+          </ul>
+        `
+      },
+      firstaid: {
+        title: "First Aid Basics",
+        content: `
+          <h3>Essential Items:</h3>
+          <ul>
+            <li>Bandages, antiseptic wipes, adhesive tape</li>
+            <li>Disposable gloves and basic medications</li>
+            <li>Scissors and tweezers</li>
+          </ul>
+
+          <h3>Primary Survey:</h3>
+          <ul>
+            <li>Check responsiveness and breathing</li>
+            <li>Call emergency services if needed</li>
+            <li>Start CPR if person is unresponsive and not breathing</li>
+          </ul>
+
+          <h3>Bleeding Control:</h3>
+          <ul>
+            <li>Apply direct pressure and elevate the wound</li>
+            <li>Use clean dressings and seek medical help for heavy bleeding</li>
+          </ul>
+        `
+      }
+    };
+
+    // elements
+    const courseTitleEl = document.getElementById('courseTitle');
+    const courseMaterialEl = document.getElementById('courseMaterial');
+    const courseContentWrap = document.getElementById('courseContent');
+    const dashboardEl = document.querySelector('.dashboard');
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+
+    // show course
+    function showCourse(type) {
+      const course = courses[type];
+      if (!course) return;
+      courseTitleEl.textContent = course.title;
+      courseMaterialEl.innerHTML = course.content;
+      dashboardEl.style.display = 'none';
+      courseContentWrap.style.display = 'block';
+
+      // reset progress
+      updateProgress(0);
+
+      // ensure scroll to top
+      courseMaterialEl.scrollTop = 0;
+
+      // attach scroll listener for progress
+      courseMaterialEl.addEventListener('scroll', onCourseScroll, { passive: true });
+      // also update progress if user resizes or uses keyboard
+      courseMaterialEl.addEventListener('keydown', onCourseScroll);
+      // update attributes for accessibility
+      progressBar.setAttribute('aria-valuenow', '0');
+    }
+
+    function hideCourse() {
+      // remove listeners to avoid duplicates
+      courseMaterialEl.removeEventListener('scroll', onCourseScroll);
+      courseMaterialEl.removeEventListener('keydown', onCourseScroll);
+
+      dashboardEl.style.display = 'grid';
+      courseContentWrap.style.display = 'none';
+
+      // reset progress visually
+      updateProgress(0);
+    }
+
+    // compute and set progress based on scroll percent
+    function onCourseScroll() {
+      const el = courseMaterialEl;
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      let percent = 0;
+      if (maxScroll > 0) percent = Math.round((el.scrollTop / maxScroll) * 100);
+      updateProgress(percent);
+    }
+
+    function updateProgress(percent) {
+      progressBar.style.width = percent + '%';
+      progressPercent.textContent = percent + '%';
+      progressBar.setAttribute('aria-valuenow', String(percent));
+    }
+
+    // small enhancement: when content loads, compute initial progress
+    // observe changes in courseMaterial's content to recalc scroll metrics
+    const observer = new MutationObserver(() => {
+      // slight delay so layout updates
+      setTimeout(onCourseScroll, 40);
+    });
+    observer.observe(courseMaterialEl, { childList: true, subtree: true });
+
+    // optional: show keyboard hint and ensure focusable
+    // when opening a course, focus the scrollable area
+    const originalShowCourse = showCourse;
+    showCourse = function(type) {
+      originalShowCourse(type);
+      setTimeout(() => { courseMaterialEl.focus(); }, 100);
+    };
+  </script>
+</body>
+</html>

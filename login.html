@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Login - Disaster Preparedness</title>
+    <link rel='stylesheet' href='../css/simple-style.css'>
+</head>
+<style>
+    /* =============== GLOBAL RESET =============== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #f4f7ff;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+}
+
+/* =============== HEADER =============== */
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #3a6ff7;
+}
+
+header p {
+    margin-top: 5px;
+    color: #555;
+    font-size: 1rem;
+}
+
+/* =============== FORM =============== */
+.form-container {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 1.6px solid #ccd7ff;
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+    background: #fafbff;
+}
+
+.form-group input:focus {
+    border-color: #3a6ff7;
+    box-shadow: 0 0 0 2px rgba(58, 111, 247, 0.2);
+}
+
+/* =============== BUTTON =============== */
+.btn {
+    width: 100%;
+    background: #3a6ff7;
+    color: white;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #224ccc;
+    transform: translateY(-2px);
+}
+
+/* =============== LINKS =============== */
+a {
+    color: #3a6ff7;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* =============== RESPONSIVE =============== */
+@media (max-width: 480px) {
+    .container {
+        padding: 25px;
+    }
+}
+
+</style>
+<body>
+    <div class='container'>
+        <header>
+            <h1>🔐 Login</h1>
+            <p>Access your safety training account</p>
+        </header>
+
+        <div class='form-container'>
+            <form id='loginForm'>
+                <div class='form-group'>
+                    <label for='email'>Email Address</label>
+                    <input type='email' id='email' required>
+                </div>
+
+                <div class='form-group'>
+                    <label for='password'>Password</label>
+                    <input type='password' id='password' required>
+                </div>
+
+                <button type='submit' class='btn'>Sign In</button>
+            </form>
+
+            <div style='text-align: center; margin-top: 20px;'>
+                <p>Don't have an account? <a href='register.html'>Sign up here</a></p>
+                <p><a href='../index.html'>← Back to Home</a></p>
+            
+            </div>
+        </div>
+    </div>
+
+    <script src='../js/simple-main.js'></script>
+</body>
+</html>
+

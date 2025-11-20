@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Plan - Disaster Preparedness</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<style>
+    /* ===== PAGE LAYOUT ===== */
+.container {
+    max-width: 900px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    margin: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #3a6ff7;
+}
+
+header p {
+    color: #555;
+    margin-top: 5px;
+}
+
+header a {
+    color: #3a6ff7;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+/* ===== FORM STYLING ===== */
+.form-container {
+    margin-top: 10px;
+}
+
+h3 {
+    margin: 18px 0 12px 0;
+    font-size: 1.3rem;
+    color: #222;
+    border-left: 5px solid #3a6ff7;
+    padding-left: 8px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.6px solid #ccd7ff;
+    background: #fafbff;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #3a6ff7;
+    box-shadow: 0 0 0 2px rgba(58,111,247,0.25);
+    outline: none;
+}
+
+/* CHECKBOX LIST */
+.form-container label input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+    background: #3a6ff7;
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.btn:hover {
+    background: #224ccc;
+    transform: translateY(-2px);
+}
+
+/* ===== SAVED PLAN PANEL ===== */
+#savedPlan {
+    background: #f8faff;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #dce4ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+#savedPlan h2 {
+    color: #111;
+    margin-bottom: 12px;
+}
+
+#planDetails p {
+    margin: 6px 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+#planDetails h3 {
+    margin-top: 20px;
+}
+
+/* PROGRESS BAR */
+.progress-bar-bg {
+    background: #ecf0f1;
+    height: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #27ae60;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        padding: 25px;
+    }
+}
+
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Emergency Plan</h1>
+            <p>Create your personalized safety plan</p>
+            <p><a href="dashboard.html">← Back to Dashboard</a></p>
+        </header>
+
+        <div class="form-container">
+            <form id="emergencyPlanForm">
+                <h3>Family/Emergency Contacts</h3>
+                <div class="form-group">
+                    <label>Primary Contact Name</label>
+                    <input type="text" id="contact1Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Primary Contact Phone</label>
+                    <input type="tel" id="contact1Phone" placeholder="Phone number">
+                </div>
+
+                <h3>Meeting Places</h3>
+                <div class="form-group">
+                    <label>Indoor Meeting Place</label>
+                    <input type="text" id="meetingIndoor" placeholder="e.g., Basement, Interior room">
+                </div>
+                <div class="form-group">
+                    <label>Outdoor Meeting Place</label>
+                    <input type="text" id="meetingOutdoor" placeholder="e.g., Neighborhood park">
+                </div>
+
+                <h3>Emergency Kit Checklist</h3>
+                <div style="text-align: left;">
+                    <label><input type="checkbox" id="water"> Water (1 gallon per person per day)</label><br>
+                    <label><input type="checkbox" id="food"> Non-perishable food (3-day supply)</label><br>
+                    <label><input type="checkbox" id="firstaid"> First aid kit</label><br>
+                    <label><input type="checkbox" id="flashlight"> Flashlight with batteries</label><br>
+                    <label><input type="checkbox" id="radio"> Battery-powered radio</label><br>
+                    <label><input type="checkbox" id="documents"> Important documents copies</label>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top: 20px;">Save Emergency Plan</button>
+            </form>
+        </div>
+
+        <div id="savedPlan" style="display: none; margin-top: 30px;">
+            <div class="simulation-scene">
+                <h2>Your Emergency Plan</h2>
+                <div id="planDetails"></div>
+                <button onclick="editPlan()" class="btn">Edit Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('emergencyPlanForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const plan = {
+                contact1Name: document.getElementById('contact1Name').value,
+                contact1Phone: document.getElementById('contact1Phone').value,
+                meetingIndoor: document.getElementById('meetingIndoor').value,
+                meetingOutdoor: document.getElementById('meetingOutdoor').value,
+                kitItems: {
+                    water: document.getElementById('water').checked,
+                    food: document.getElementById('food').checked,
+                    firstaid: document.getElementById('firstaid').checked,
+                    flashlight: document.getElementById('flashlight').checked,
+                    radio: document.getElementById('radio').checked,
+                    documents: document.getElementById('documents').checked
+                },
+                createdAt: new Date().toLocaleString()
+            };
+
+            localStorage.setItem('emergencyPlan', JSON.stringify(plan));
+            displayPlan(plan);
+        });
+
+        function displayPlan(plan) {
+            document.getElementById('emergencyPlanForm').style.display = 'none';
+            document.getElementById('savedPlan').style.display = 'block';
+            
+            const completedItems = Object.values(plan.kitItems).filter(item => item).length;
+            const totalItems = Object.keys(plan.kitItems).length;
+            
+            document.getElementById('planDetails').innerHTML = `
+                <h3>Emergency Contacts:</h3>
+                <p><strong>Primary Contact:</strong> ${plan.contact1Name} - ${plan.contact1Phone}</p>
+                
+                <h3>Meeting Places:</h3>
+                <p><strong>Indoor:</strong> ${plan.meetingIndoor}</p>
+                <p><strong>Outdoor:</strong> ${plan.meetingOutdoor}</p>
+                
+                <h3>Emergency Kit Progress:</h3>
+                <p>${completedItems} out of ${totalItems} items prepared</p>
+                <div style="background: #ecf0f1; height: 20px; border-radius: 10px; margin: 10px 0;">
+                    <div style="background: #27ae60; height: 100%; width: ${(completedItems/totalItems)*100}%; border-radius: 10px;"></div>
+                </div>
+                
+                <p><em>Plan created: ${plan.createdAt}</em></p>
+            `;
+        }
+
+        function editPlan() {
+            document.getElementById('emergencyPlanForm').style.display = 'block';
+            document.getElementById('savedPlan').style.display = 'none';
+        }
+
+        // Load existing plan on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedPlan = localStorage.getItem('emergencyPlan');
+            if (savedPlan) {
+                displayPlan(JSON.parse(savedPlan));
+            }
+        });
+    </script>
+</body>
+</html>
